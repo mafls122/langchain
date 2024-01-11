@@ -12,3 +12,4 @@ docx2txt
 pinecone-client
 langchain_google_genai
 python-pptx
+GoogleGenerativeAIEmbeddings
