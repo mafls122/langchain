@@ -37,7 +37,7 @@ def main():
     with st.sidebar:
         uploaded_files =  st.file_uploader("참고 파일을 업로드 해주세요",type=['pdf','docx','pptx'],accept_multiple_files=True)
         api_key = st.text_input("Google API Key 입력", key="chatbot_api_key", type="password")
-        pinecone_api_key = st.text_input("Pinecone API Key 입력", key="chatbot_api_key", type="password")
+        pinecone_api_key = st.text_input("Pinecone API Key 입력", key="pinecone_api_key", type="password")
         process = st.button("Process")
     if process:
         if not api_key:
