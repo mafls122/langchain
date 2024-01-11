@@ -166,7 +166,7 @@ def get_conversation_chain(vetorestore, api_key):
     conversation_chain = ConversationalRetrievalChain.from_llm(
             llm=llm,
             chain_type="refine", #stuff
-            retriever=vetorestore.as_retriever(search_type = 'mmr', search_kwargs={'k':5, 'fetch_k': 10}, vervose = True),
+            retriever=vetorestore.as_retriever(search_type = 'mmr', vervose = True),
             memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer'),
             get_chat_history=lambda h: h,
             return_source_documents=True,
