@@ -12,6 +12,9 @@ from langchain.memory import ConversationBufferMemory
 from langchain.vectorstores import FAISS
 from langchain.callbacks import get_openai_callback
 from langchain.memory import StreamlitChatMessageHistory
+import pinecone
+from langchain_community.vectorstores import Pinecone
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 
 def main():
@@ -29,20 +32,23 @@ def main():
 
     if "processComplete" not in st.session_state:
         st.session_state.processComplete = None
-
+        
+    #왼쪽 사이드바
     with st.sidebar:
         uploaded_files =  st.file_uploader("참고 파일을 업로드 해주세요",type=['pdf','docx','pptx'],accept_multiple_files=True)
-        openai_api_key = st.text_input("Google API Key 입력", key="chatbot_api_key", type="password")
+        api_key = st.text_input("Google API Key 입력", key="chatbot_api_key", type="password")
+        pinecone_api_key = st.text_input("Pinecone API Key 입력", key="chatbot_api_key", type="password")
         process = st.button("Process")
     if process:
-        if not openai_api_key:
+        if not api_key:
             st.info("API Key를 입력해주세요.")
             st.stop()
         files_text = get_text(uploaded_files)
         text_chunks = get_text_chunks(files_text)
-        vetorestore = get_vectorstore(text_chunks)
+        # vetorestore = get_vectorstore(text_chunks)
+        vetorestore = get_pinecone_vectorstore(text_chunks, api_key, pinecone_api_key)
 
-        st.session_state.conversation = get_conversation_chain(vetorestore,openai_api_key)
+        st.session_state.conversation = get_conversation_chain(vetorestore,api_key)
 
         st.session_state.processComplete = True
 
@@ -134,6 +140,24 @@ def get_vectorstore(text_chunks):
     vectordb = FAISS.from_documents(text_chunks, embeddings)
     return vectordb
 
+def get_pinecone_vectorstore(text_chunks, api_key, pinecone_key):
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=api_key)
+    
+    pinecone.init(
+        api_key=pinecone_key,
+        environment="gcp-starter"
+    )
+
+    # 생성할 인덱스명
+    idx_nm = "testp"
+
+    if idx_nm not in pinecone.list_indexes():
+        pinecone.create_index(name=idx_nm, metric="cosine", dimension=768)
+        # 파라미터 : 인덱스명, 계산방법, 차원
+
+    vectordb = Pinecone.from_documents(text_chunks, embeddings, index_name=idx_nm)
+
+    return vectordb
 
 def get_conversation_chain(vetorestore, api_key):
 
