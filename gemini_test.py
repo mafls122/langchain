@@ -1,4 +1,3 @@
-%%writefile gemini_app.py
 import streamlit as st
 import tiktoken
 from loguru import logger
