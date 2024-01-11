@@ -31,12 +31,12 @@ def main():
         st.session_state.processComplete = None
 
     with st.sidebar:
-        uploaded_files =  st.file_uploader("Upload your file",type=['pdf','docx','pptx'],accept_multiple_files=True)
-        openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+        uploaded_files =  st.file_uploader("참고 파일을 업로드 해주세요",type=['pdf','docx','pptx'],accept_multiple_files=True)
+        openai_api_key = st.text_input("Google API Key 입력", key="chatbot_api_key", type="password")
         process = st.button("Process")
     if process:
         if not openai_api_key:
-            st.info("Please add your OpenAI API key to continue.")
+            st.info("API Key를 입력해주세요.")
             st.stop()
         files_text = get_text(uploaded_files)
         text_chunks = get_text_chunks(files_text)
@@ -135,9 +135,9 @@ def get_vectorstore(text_chunks):
     return vectordb
 
 
-def get_conversation_chain(vetorestore,openai_api_key):
+def get_conversation_chain(vetorestore, api_key):
 
-    llm = ChatGoogleGenerativeAI(google_api_key="key입력-본사문의",model="gemini-pro",temperature = 0,convert_system_message_to_human=True)
+    llm = ChatGoogleGenerativeAI(google_api_key=api_key,model="gemini-pro",temperature = 0,convert_system_message_to_human=True)
 
     conversation_chain = ConversationalRetrievalChain.from_llm(
             llm=llm,
