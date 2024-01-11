@@ -123,8 +123,8 @@ def get_text(docs):
 
 def get_text_chunks(text):
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=900,
-        chunk_overlap=100,
+        chunk_size=1000,
+        chunk_overlap=500,
         length_function=tiktoken_len
     )
     chunks = text_splitter.split_documents(text)
@@ -166,7 +166,7 @@ def get_conversation_chain(vetorestore, api_key):
     conversation_chain = ConversationalRetrievalChain.from_llm(
             llm=llm,
             chain_type="refine", #stuff
-            retriever=vetorestore.as_retriever(search_type = 'mmr', vervose = True),
+            retriever=vetorestore.as_retriever(search_type = 'mmr', search_kwargs={'k':5, 'fetch_k': 10}, vervose = True),
             memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer'),
             get_chat_history=lambda h: h,
             return_source_documents=True,
