@@ -140,8 +140,8 @@ def get_vectorstore(text_chunks):
     vectordb = FAISS.from_documents(text_chunks, embeddings)
     return vectordb
 
-def get_pinecone_vectorstore(text_chunks, api_key, pinecone_key):
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=api_key)
+def get_pinecone_vectorstore(text_chunks, llm_api_key, pinecone_key):
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=llm_api_key)
     
     pinecone.init(
         api_key=pinecone_key,
