@@ -1,48 +1,25 @@
 import streamlit as st
 import tiktoken
 from loguru import logger
-
 from langchain.chains import ConversationalRetrievalChain
-from langchain.chat_models import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
-
 from langchain.document_loaders import PyPDFLoader
 from langchain.document_loaders import Docx2txtLoader
 from langchain.document_loaders import UnstructuredPowerPointLoader
-
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
-
 from langchain.memory import ConversationBufferMemory
 from langchain.vectorstores import FAISS
-
-# from streamlit_chat import message
 from langchain.callbacks import get_openai_callback
 from langchain.memory import StreamlitChatMessageHistory
-
-from langchain.prompts import (
-    ChatPromptTemplate,
-    PromptTemplate,
-    SystemMessagePromptTemplate,
-    AIMessagePromptTemplate,
-    HumanMessagePromptTemplate,
-)
-from langchain.schema import (
-    AIMessage,
-    HumanMessage,
-    SystemMessage
-)
-
-from langchain.prompts import ChatPromptTemplate
-from langchain.schema.runnable import RunnableMap
 
 
 def main():
     st.set_page_config(
-    page_title="DirChat",
-    page_icon=":books:")
+    page_title="enAI_TF3",
+    page_icon=":balloon:")
 
-    st.title("_엔코아 데이터 검색(gemini pro) :blue[QA Chat]_ :books:")
+    st.title("_엔코아 AI 프로젝트 :blue[@TF3팀(gemini pro)]:balloon:")
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
@@ -71,7 +48,7 @@ def main():
 
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
-                                        "content": "안녕하세요! 주어진 문서에 대해 궁금하신 것이 있으면 언제든 물어봐주세요!"}]
+                                        "content": "안녕하세요! 주어진 문서에 대해 궁금한 부분을 질문 해주세요!"}]
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
@@ -89,7 +66,7 @@ def main():
         with st.chat_message("assistant"):
             chain = st.session_state.conversation
 
-            with st.spinner("첨부한 문서에서 찾아보자!!"):
+            with st.spinner("첨부한 문서에서 찾아보고 있습니다!"):
                 result = chain({"question": query})
 
                 with get_openai_callback() as cb:
