@@ -19,7 +19,7 @@ def main():
     page_title="enAI_TF3",
     page_icon=":balloon:")
 
-    st.title("_엔코아 AI 프로젝트 :blue[@TF3팀(gemini pro)]:balloon:")
+    st.title("엔코아 AI 프로젝트 :blue[@TF3팀(gemini pro)]:balloon:")
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
